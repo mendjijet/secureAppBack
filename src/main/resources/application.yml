@@ -1,0 +1,28 @@
+server:
+  port: 8080
+spring:
+  application:
+    name=secureAppBack
+  datasource:
+    url: jdbc:postgresql://localhost:5432/secureCapita
+    username: postgres
+    password: systhag
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        globally_quoted_indentifiers: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  sql:
+    init:
+      mode: never
+      continue-on-error: false
+  logging:
+    level:
+      org.hibernate.SQL: debug
+
