@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 
 @Data
@@ -13,8 +15,11 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(NON_DEFAULT)
-public class Role {
+public class UserEvent {
     private Long id;
-    private String name;
-    private String permission;
+    private String type;
+    private String description;
+    private String device;
+    private String ipAddress;
+    private LocalDateTime createdAt;
 }
