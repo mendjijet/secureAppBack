@@ -16,8 +16,8 @@ import static com.twilio.rest.api.v2010.account.Message.creator;
  */
 public class SmsUtils {
     private static final String FROM_NUMBER = "+14782105287";
-    private static final String SID_KEY = "AC5f1f44ea48833e4cd5b0275b54130a48";
-    private static final String TOKEN_KEY = "bf9641eb42186d0dbbce856c1e3f8775";
+    private static final String SID_KEY = "hjs";
+    private static final String TOKEN_KEY = "asfsa";
 
     public static void sendSMS(String phoneNumber, String messageBody) {
         CompletableFuture.runAsync(() -> {
