@@ -1,5 +1,11 @@
+jwt:
+  secret: ENC(42PAk0avAHEtYIaFF8kbbDgYKqomgNxrXlgAOjlApvKmT/tww3EddA==)
 server:
   port: 8080
+  error:
+    path: /user/error
+    whitelabel:
+      enabled: false
 spring:
   application:
     name: secureappback

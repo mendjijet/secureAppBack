@@ -5,3 +5,8 @@ spring:
 application:
   title: secureappback
   version: 1.0
+server:
+  error:
+    path: /users/error
+    whitelabel:
+      enabled: false

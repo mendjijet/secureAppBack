@@ -26,47 +26,52 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO getUserByEmail(String email) {
-    return null;
+    return mapToUserDTO(userRepository.getUserByEmail(email));
   }
 
   @Override
   public void sendVerificationCode(UserDTO user) {
-
+    userRepository.sendVerificationCode(user);
   }
 
   @Override
   public UserDTO verifyCode(String email, String code) {
-    return null;
+    return mapToUserDTO(userRepository.verifyCode(email, code));
   }
 
   @Override
   public void resetPassword(String email) {
+    userRepository.resetPassword(email);
+  }
 
+  @Override
+  public void renewPassword(String key, String newpassword, String confirmPassword) {
+    userRepository.renewPassword(key, newpassword, confirmPassword);
   }
 
   @Override
   public UserDTO verifyPasswordKey(String key) {
-    return null;
+    return mapToUserDTO(userRepository.verifyPasswordKey(key));
   }
 
   @Override
   public void updatePassword(Long userId, String password, String confirmPassword) {
-
+    userRepository.renewPassword(userId, password, confirmPassword);
   }
 
   @Override
   public UserDTO verifyAccountKey(String key) {
-    return null;
+    return mapToUserDTO(userRepository.verifyAccountKey(key));
   }
 
   @Override
   public UserDTO updateUserDetails(UpdateForm user) {
-    return null;
+    return mapToUserDTO(userRepository.updateUserDetails(user));
   }
 
   @Override
   public UserDTO getUserById(Long userId) {
-    return null;
+    return mapToUserDTO(userRepository.get(userId));
   }
 
   @Override

@@ -25,7 +25,7 @@ class SecureAppBackApplicationTests {
 		config.setStringOutputType("base64");
 		encryptor.setConfig(config);
 
-		String plaintext = "postgres";
+		String plaintext = "Jetsupercomplexsecret-prod";
 		System.out.println("Encrypted key : " + encryptor.encrypt(plaintext));
 	}
 
