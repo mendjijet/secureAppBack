@@ -4,8 +4,11 @@ import static com.jet.com.secureappback.enums.RoleType.ROLE_USER;
 import static com.jet.com.secureappback.enums.VerificationType.ACCOUNT;
 import static com.jet.com.secureappback.enums.VerificationType.PASSWORD;
 import static com.jet.com.secureappback.query.UserQuery.*;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.Map.of;
 import static java.util.Objects.requireNonNull;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath;
 
 import com.jet.com.secureappback.domain.Role;
@@ -17,15 +20,15 @@ import com.jet.com.secureappback.exception.ApiException;
 import com.jet.com.secureappback.form.UpdateForm;
 import com.jet.com.secureappback.repository.RoleRepository;
 import com.jet.com.secureappback.repository.UserRepository;
-
+import com.jet.com.secureappback.rowmapper.UserRowMapper;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-
-import com.jet.com.secureappback.rowmapper.UserRowMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -39,19 +42,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static java.util.Map.of;
-import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.time.DateFormatUtils.format;
-import static org.apache.commons.lang3.time.DateUtils.addDays;
+import org.springframework.web.multipart.MultipartFile;
 
 @Repository
 @RequiredArgsConstructor
 @Slf4j
 public class UserRepositoryImpl implements UserRepository<User> , UserDetailsService {
-  private static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+  //private static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
   private static final String USERS_COLUMN_ID = "ID";
   private final NamedParameterJdbcTemplate jdbc;
   private final RoleRepository<Role> roleRepository;
@@ -199,7 +196,6 @@ public class UserRepositoryImpl implements UserRepository<User> , UserDetailsSer
       //sendSMS(user.getPhone(), "From: SecureCapita \nVerification code\n" + verificationCode);
       log.info("Verification Code: {}", verificationCode);
     } catch (Exception exception) {
-      exception.printStackTrace();
       log.error(exception.getMessage());
       throw new ApiException("An error occurred. Please try again.");
     }
@@ -223,11 +219,10 @@ public class UserRepositoryImpl implements UserRepository<User> , UserDetailsSer
 
   @Override
   public User verifyPasswordKey(String key) {
-    if(isLinkExpired(key, PASSWORD)) throw new ApiException("This link has expired. Please reset your password again.");
+    if(isLinkExpired(key)) throw new ApiException("This link has expired. Please reset your password again.");
     try {
-      User user = jdbc.queryForObject(SELECT_USER_BY_PASSWORD_URL_QUERY, of("url", getVerificationUrl(key, PASSWORD.getType())), new UserRowMapper());
-      //jdbc.update("DELETE_USER_FROM_PASSWORD_VERIFICATION_QUERY", of("id", user.getId())); //Depends on use case / developer or business
-      return user;
+        //jdbc.update("DELETE_USER_FROM_PASSWORD_VERIFICATION_QUERY", of("id", user.getId())); //Depends on use case / developer or business
+      return jdbc.queryForObject(SELECT_USER_BY_PASSWORD_URL_QUERY, of("url", getVerificationUrl(key, PASSWORD.getType())), new UserRowMapper());
     } catch (EmptyResultDataAccessException exception) {
       log.error(exception.getMessage());
       throw new ApiException("This link is not valid. Please reset your password again.");
@@ -241,7 +236,7 @@ public class UserRepositoryImpl implements UserRepository<User> , UserDetailsSer
   public void renewPassword(String key, String password, String confirmPassword) {
     if(!password.equals(confirmPassword)) throw new ApiException("Passwords don't match. Please try again.");
     if(isLinkExist(key, PASSWORD)==0) throw new ApiException("This link has expired. Please reset your password again.");
-    if (Boolean.TRUE.equals(isLinkExpired(key, PASSWORD)))
+    if (Boolean.TRUE.equals(isLinkExpired(key)))
       throw new ApiException("This link has expired. Please reset your password again.");
     try {
       jdbc.update(UPDATE_USER_PASSWORD_BY_URL_QUERY, of("password", encoder.encode(password), "url", getVerificationUrl(key, PASSWORD.getType())));
@@ -291,9 +286,42 @@ public class UserRepositoryImpl implements UserRepository<User> , UserDetailsSer
     }
   }
 
-  private Boolean isLinkExpired(String key, VerificationType password) {
+  @Override
+  public void updateAccountSettings(Long userId, Boolean enabled, Boolean notLocked) {
     try {
-      return jdbc.queryForObject(SELECT_EXPIRATION_BY_URL, of("url", getVerificationUrl(key, password.getType())), Boolean.class);
+      jdbc.update(UPDATE_USER_SETTINGS_QUERY, of("userId", userId, "enabled", enabled, "notLocked", notLocked));
+    } catch (Exception exception) {
+      log.error(exception.getMessage());
+      throw new ApiException("An error occurred. Please try again.");
+    }
+  }
+
+  @Override
+  public User toggleMfa(String email) {
+    User user = getUserByEmail(email);
+    if(isBlank(user.getPhone())) { throw new ApiException("You need a phone number to change Multi-Factor Authentication"); }
+    user.setUsingMfa(!user.isUsingMfa());
+    try {
+      jdbc.update(TOGGLE_USER_MFA_QUERY, of("email", email, "isUsingMfa", user.isUsingMfa()));
+      return user;
+    } catch (Exception exception) {
+      log.error(exception.getMessage());
+      throw new ApiException("Unable to update Multi-Factor Authentication");
+    }
+  }
+
+  @Override
+  public void updateImage(UserDTO user, MultipartFile image) {
+    String userImageUrl = setUserImageUrl(user.getEmail());
+    user.setImageUrl(userImageUrl);
+    saveImage(user.getEmail(), image);
+    jdbc.update(UPDATE_USER_IMAGE_QUERY, of("imageUrl", userImageUrl, "id", user.getId()));
+
+  }
+
+  private Boolean isLinkExpired(String key) {
+    try {
+      return jdbc.queryForObject(SELECT_EXPIRATION_BY_URL, of("url", getVerificationUrl(key, VerificationType.PASSWORD.getType())), Boolean.class);
     } catch (EmptyResultDataAccessException exception) {
       log.error(exception.getMessage());
       throw new ApiException("This link is not valid. Please reset your password again");
@@ -336,6 +364,30 @@ public class UserRepositoryImpl implements UserRepository<User> , UserDetailsSer
             .addValue("address", user.getAddress())
             .addValue("title", user.getTitle())
             .addValue("bio", user.getBio());
+  }
+
+  private String setUserImageUrl(String email) {
+    return fromCurrentContextPath().path("/user/image/" + email + ".png").toUriString();
+  }
+
+  private void saveImage(String email, MultipartFile image) {
+    Path fileStorageLocation = Paths.get(System.getProperty("user.home") + "/Downloads/images/").toAbsolutePath().normalize();
+    if(!Files.exists(fileStorageLocation)) {
+      try {
+        Files.createDirectories(fileStorageLocation);
+      } catch (Exception exception) {
+        log.error(exception.getMessage());
+        throw new ApiException("Unable to create directories to save image");
+      }
+      log.info("Created directories: {}", fileStorageLocation);
+    }
+    try {
+      Files.copy(image.getInputStream(), fileStorageLocation.resolve(email + ".png"), REPLACE_EXISTING);
+    } catch (IOException exception) {
+      log.error(exception.getMessage());
+      throw new ApiException(exception.getMessage());
+    }
+    log.info("File saved in: {} folder", fileStorageLocation);
   }
 
   private void sendEmail(String firstName, String email, String verificationUrl, VerificationType verificationType) {

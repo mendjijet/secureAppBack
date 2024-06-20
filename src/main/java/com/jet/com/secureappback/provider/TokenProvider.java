@@ -39,9 +39,11 @@ public class TokenProvider {
     public static final String TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified";
     private static final String JET_ENTERPRISE_LLC = "JET_ENTERPRISE_LLC";
     private static final String CUSTOMER_MANAGEMENT_SERVICE = "CUSTOMER_MANAGEMENT_SERVICE";
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1_800_000;
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 432_000_000;
     private final UserService userService;
+    @Value("${token_expiration_time.access}")
+    private long ACCESS_TOKEN_EXPIRATION_TIME;
+    @Value("${token_expiration_time.refresh}")
+    private  long REFRESH_TOKEN_EXPIRATION_TIME;
     @Value("${jwt.secret}")
     private String secret;
 

@@ -1,3 +1,6 @@
+token_expiration_time:
+  access: 432_000_000
+  refresh: 432_000_000
 jwt:
   secret: ENC(42PAk0avAHEtYIaFF8kbbDgYKqomgNxrXlgAOjlApvKmT/tww3EddA==)
 server:
@@ -9,10 +12,10 @@ server:
 spring:
   application:
     name: secureappback
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+#  autoconfigure:
+#    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   datasource:
-    url: jdbc:postgresql://localhost:5432/secureCapita
+    url: jdbc:postgresql://localhost:5433/secureCapita
     username: ENC(nnBADRj6fvYT/TJ3MyzKQVyqDVYDhAiQ)
     password: ENC(EGJMxU6bmZMWFMcoituqdg==)
     driver-class-name: org.postgresql.Driver
@@ -24,7 +27,6 @@ spring:
     properties:
       hibernate:
         globally_quoted_indentifiers: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
   sql:
     init:

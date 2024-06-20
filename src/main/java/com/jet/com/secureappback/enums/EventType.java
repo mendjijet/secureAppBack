@@ -1,5 +1,8 @@
 package com.jet.com.secureappback.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum EventType {
     LOGIN_ATTEMPT("You tried to log in"),
     LOGIN_ATTEMPT_FAILURE("You tried to log in and you failed"),
@@ -17,7 +20,4 @@ public enum EventType {
         this.description = description;
     }
 
-    public String getDescription() {
-        return this.description;
-    }
 }

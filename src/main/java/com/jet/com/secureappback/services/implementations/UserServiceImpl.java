@@ -76,27 +76,27 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void updatePassword(Long userId, String currentPassword, String newPassword, String confirmNewPassword) {
-
+    userRepository.updatePassword(userId, currentPassword, newPassword, confirmNewPassword);
   }
 
   @Override
   public void updateUserRole(Long userId, String roleName) {
-
+    roleRoleRepository.updateUserRole(userId, roleName);
   }
 
   @Override
   public void updateAccountSettings(Long userId, Boolean enabled, Boolean notLocked) {
-
+    userRepository.updateAccountSettings(userId, enabled, notLocked);
   }
 
   @Override
   public UserDTO toggleMfa(String email) {
-    return null;
+    return mapToUserDTO(userRepository.toggleMfa(email));
   }
 
   @Override
   public void updateImage(UserDTO user, MultipartFile image) {
-
+    userRepository.updateImage(user, image);
   }
 
   private UserDTO mapToUserDTO(User user) {

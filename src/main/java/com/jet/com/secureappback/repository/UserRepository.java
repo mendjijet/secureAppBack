@@ -3,6 +3,7 @@ package com.jet.com.secureappback.repository;
 import com.jet.com.secureappback.domain.User;
 import com.jet.com.secureappback.dto.UserDTO;
 import com.jet.com.secureappback.form.UpdateForm;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 
@@ -26,7 +27,7 @@ public interface UserRepository<T extends User> {
     T verifyAccountKey(String key);
     T updateUserDetails(UpdateForm user);
     void updatePassword(Long id, String currentPassword, String newPassword, String confirmNewPassword);
-//    void updateAccountSettings(Long userId, Boolean enabled, Boolean notLocked);
-//    User toggleMfa(String email);
-//    void updateImage(UserDTO user, MultipartFile image);
+    void updateAccountSettings(Long userId, Boolean enabled, Boolean notLocked);
+    User toggleMfa(String email);
+    void updateImage(UserDTO user, MultipartFile image);
 }

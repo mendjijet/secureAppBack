@@ -112,7 +112,7 @@ public class HandleControllerAdvice extends ResponseEntityExceptionHandler imple
         return new ResponseEntity<>(
                 HttpResponse.builder()
                         .timeStamp(now().toString())
-                        .reason("Access denied. You don\'t have access")
+                        .reason("Access denied. You don't have access")
                         .developerMessage(exception.getMessage())
                         .status(FORBIDDEN)
                         .statusCode(FORBIDDEN.value())
