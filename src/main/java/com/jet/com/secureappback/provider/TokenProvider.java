@@ -1,6 +1,7 @@
 package com.jet.com.secureappback.provider;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
+import static com.jet.com.secureappback.utils.SecureAppBackApplicationConst.*;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
@@ -35,10 +36,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
-    public static final String AUTHORITIES = "authorities";
-    public static final String TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified";
-    private static final String JET_ENTERPRISE_LLC = "JET_ENTERPRISE_LLC";
-    private static final String CUSTOMER_MANAGEMENT_SERVICE = "CUSTOMER_MANAGEMENT_SERVICE";
+
     private final UserService userService;
     @Value("${token_expiration_time.access}")
     private long ACCESS_TOKEN_EXPIRATION_TIME;

@@ -1,7 +1,7 @@
 package com.jet.com.secureappback.filter;
 
 import static com.jet.com.secureappback.utils.ExceptionUtils.processError;
-import static com.jet.com.secureappback.utils.SecureAppBackApplicationConst.TOKEN_PREFIX;
+import static com.jet.com.secureappback.utils.SecureAppBackApplicationConst.*;
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -33,15 +33,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
-  private static final String[] PUBLIC_ROUTES = {
-    "/user/new/password",
-    "/user/login",
-    "/user/verify/code",
-    "/user/register",
-    "/user/refresh/token",
-    "/user/image"
-  };
-  private static final String HTTP_OPTIONS_METHOD = "OPTIONS";
+
   private final TokenProvider tokenProvider;
 
   @Override

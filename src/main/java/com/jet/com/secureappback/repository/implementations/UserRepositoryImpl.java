@@ -4,6 +4,7 @@ import static com.jet.com.secureappback.enums.RoleType.ROLE_USER;
 import static com.jet.com.secureappback.enums.VerificationType.ACCOUNT;
 import static com.jet.com.secureappback.enums.VerificationType.PASSWORD;
 import static com.jet.com.secureappback.query.UserQuery.*;
+import static com.jet.com.secureappback.utils.SecureAppBackApplicationConst.USERS_COLUMN_ID;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.Map.of;
 import static java.util.Objects.requireNonNull;
@@ -29,6 +30,9 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+import com.jet.com.secureappback.services.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -49,10 +53,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class UserRepositoryImpl implements UserRepository<User> , UserDetailsService {
   //private static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
-  private static final String USERS_COLUMN_ID = "ID";
+
   private final NamedParameterJdbcTemplate jdbc;
   private final RoleRepository<Role> roleRepository;
   private final BCryptPasswordEncoder encoder;
+  private final EmailService emailService;
 
   @Override
   public User create(User user) {
@@ -73,7 +78,7 @@ public class UserRepositoryImpl implements UserRepository<User> , UserDetailsSer
       // Save URL in verification table
       jdbc.update(INSERT_ACCOUNT_VERIFICATION_URL_QUERY, of("userId", user.getId(), "url", verificationUrl));
       // Send email to user with verification URL
-      //sendEmail(user.getFirstName(), user.getEmail(), verificationUrl, ACCOUNT);
+      sendEmail(user.getFirstName(), user.getEmail(), verificationUrl, ACCOUNT);
       user.setEnabled(false);
       user.setNotLocked(true);
       // Return the newly created user
@@ -391,7 +396,7 @@ public class UserRepositoryImpl implements UserRepository<User> , UserDetailsSer
   }
 
   private void sendEmail(String firstName, String email, String verificationUrl, VerificationType verificationType) {
-    //CompletableFuture.runAsync(() -> emailService.sendVerificationEmail(firstName, email, verificationUrl, verificationType));
+    CompletableFuture.runAsync(() -> emailService.sendVerificationEmail(firstName, email, verificationUrl, verificationType));
 
         /*CompletableFuture.runAsync(() -> {
             try {
@@ -409,15 +414,15 @@ public class UserRepositoryImpl implements UserRepository<User> , UserDetailsSer
             }
         });*/
 
-        /*CompletableFuture<Void> future = CompletableFuture.runAsync(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    emailService.sendVerificationEmail(firstName, email, verificationUrl, verificationType);
-                } catch (Exception exception) {
-                    throw new ApiException("Unable to send email");
-                }
-            }
-        });*/
+//        CompletableFuture<Void> future = CompletableFuture.runAsync(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    emailService.sendVerificationEmail(firstName, email, verificationUrl, verificationType);
+//                } catch (Exception exception) {
+//                    throw new ApiException("Unable to send email");
+//                }
+//            }
+//        });
   }
 }

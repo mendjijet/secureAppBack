@@ -30,4 +30,19 @@ spring:
     init:
       mode: never
       continue-on-error: false
+  mail:
+    host: mail.enstmo-ueb.cm
+    port: 587
+    username: ENC(WXSieszJBlhSCgHlPHjfYNt5HmY4ysLf2D+0ImTmpSw=)
+    password: ENC(qW/ppbUomLX3gn6o11mH+KdGjK09kmeb)
+    properties:
+      mail:
+        smtp:
+          writetimeout: 5000
+          connectiontimeout: 5000
+          timeout: 5000
+          auth: true
+          starttls:
+            enable: true
+            required: true
 

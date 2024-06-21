@@ -12,8 +12,8 @@ server:
 spring:
   application:
     name: secureappback
-#  autoconfigure:
-#    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  #  autoconfigure:
+  #    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   datasource:
     url: jdbc:postgresql://localhost:5433/secureCapita
     username: ENC(nnBADRj6fvYT/TJ3MyzKQVyqDVYDhAiQ)
@@ -32,4 +32,19 @@ spring:
     init:
       mode: never
       continue-on-error: false
+  mail:
+    host: mail.enstmo-ueb.cm
+    port: 587
+    username: ENC(WXSieszJBlhSCgHlPHjfYNt5HmY4ysLf2D+0ImTmpSw=)
+    password: ENC(qW/ppbUomLX3gn6o11mH+KdGjK09kmeb)
+    properties:
+      mail:
+        smtp:
+          writetimeout: 5000
+          connectiontimeout: 5000
+          timeout: 5000
+          auth: true
+          starttls:
+            enable: true
+            required: true
 

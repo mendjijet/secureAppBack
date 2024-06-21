@@ -99,10 +99,11 @@ public class CustomerController {
 
   @GetMapping("/search")
   public ResponseEntity<HttpResponse> searchCustomer(
-      @AuthenticationPrincipal UserDTO user,
+          @RequestHeader("User-Agent") String userAgent, @AuthenticationPrincipal UserDTO user,
       Optional<String> name,
       @RequestParam Optional<Integer> page,
       @RequestParam Optional<Integer> size) {
+    System.out.println(userAgent);
     return ResponseEntity.ok(
         HttpResponse.builder()
             .timeStamp(now().toString())

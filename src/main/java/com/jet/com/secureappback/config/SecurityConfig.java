@@ -1,5 +1,6 @@
 package com.jet.com.secureappback.config;
 
+import static com.jet.com.secureappback.utils.SecureAppBackApplicationConst.PUBLIC_URLS;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -33,26 +34,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-  private static final String[] PUBLIC_URLS = {
-    "/user/verify/password/**",
-    "/user/login/**",
-    "/user/verify/code/**",
-    "/user/register/**",
-    "/user/resetpassword/**",
-    "/user/verify/account/**",
-    "/user/refresh/token/**",
-    "/user/image/**",
-    "/user/new/password/**"
-  };
-   private final CustomAuthorizationFilter customAuthorizationFilter;
+
+  private final CustomAuthorizationFilter customAuthorizationFilter;
   private final BCryptPasswordEncoder encoder;
   private final CustomAccessDeniedHandler customAccessDeniedHandler;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
   private final UserDetailsService userDetailsService;
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http)
-      throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(withDefaults())
         .cors(httpSecurityCorsConfigurer -> corsConfigurationSource())
@@ -73,8 +63,7 @@ public class SecurityConfig {
                     .hasAuthority("DELETE:USER")
                     .requestMatchers(DELETE, "/customer/delete/**")
                     .hasAuthority("DELETE:CUSTOMER"))
-            .addFilterBefore(customAuthorizationFilter,
-        UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests(request -> request.anyRequest().authenticated());
     return http.build();
   }

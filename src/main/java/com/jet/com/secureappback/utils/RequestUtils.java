@@ -1,5 +1,7 @@
 package com.jet.com.secureappback.utils;
 
+import static com.jet.com.secureappback.utils.SecureAppBackApplicationConst.USER_AGENT_HEADER;
+import static com.jet.com.secureappback.utils.SecureAppBackApplicationConst.X_FORWARDED_FOR_HEADER;
 import static nl.basjes.parse.useragent.UserAgent.AGENT_NAME;
 import static nl.basjes.parse.useragent.UserAgent.DEVICE_NAME;
 
@@ -14,8 +16,6 @@ import nl.basjes.parse.useragent.UserAgentAnalyzer;
  * @since 12/06/2024
  */
 public class RequestUtils {
-  public static final String USER_AGENT_HEADER = "user-agent";
-  public static final String X_FORWARDED_FOR_HEADER = "X-FORWARDED-FOR";
 
   private RequestUtils() {}
 

@@ -20,10 +20,7 @@ import com.jet.com.secureappback.domain.UserPrincipal;
 import com.jet.com.secureappback.dto.UserDTO;
 import com.jet.com.secureappback.event.NewUserEvent;
 import com.jet.com.secureappback.exception.ApiException;
-import com.jet.com.secureappback.form.LoginForm;
-import com.jet.com.secureappback.form.SettingsForm;
-import com.jet.com.secureappback.form.UpdateForm;
-import com.jet.com.secureappback.form.UpdatePasswordForm;
+import com.jet.com.secureappback.form.*;
 import com.jet.com.secureappback.provider.TokenProvider;
 import com.jet.com.secureappback.services.EventService;
 import com.jet.com.secureappback.services.RoleService;
@@ -285,20 +282,17 @@ public class UserController {
                 .build());
   }
 
-  @PostMapping("/resetpassword/{key}/{newpassword}/{confirmPassword}")
-  public ResponseEntity<HttpResponse> resetPasswordWithKey(
-      @PathVariable("key") String key,
-      @PathVariable("newpassword") String newpassword,
-      @PathVariable("confirmPassword") String confirmPassword) {
-    userService.renewPassword(key, newpassword, confirmPassword);
-    return ResponseEntity.ok()
-        .body(
+
+  @PutMapping("/new/password")
+  public ResponseEntity<HttpResponse> resetPasswordWithKey(@RequestBody @Valid NewPasswordForm form){
+    userService.updatePassword(form.getUserId(), form.getPassword(), form.getConfirmPassword());
+    return ResponseEntity.ok().body(
             HttpResponse.builder()
-                .timeStamp(now().toString())
-                .message("Password reset successfully")
-                .status(OK)
-                .statusCode(OK.value())
-                .build());
+                    .timeStamp(now().toString())
+                    .message("Password reset successfully")
+                    .status(OK)
+                    .statusCode(OK.value())
+                    .build());
   }
 
   // END - To reset password when user is not logged in
