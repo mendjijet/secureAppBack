@@ -1,48 +1,27 @@
-token_expiration_time:
-  access: 180_000_000
-  refresh: 432_000_000
-jwt:
-  secret: ENC(7/UD9PritIRE5Ce06dsmUXxAMavF0ZpXmJ1nsh600dznc6rO5nt6JA==)
-server:
-  port: 8085
-  error:
-    path: /user/error
-    whitelabel:
-      enabled: false
-spring:
-  application:
-    name: secureappback
-  datasource:
-    url: jdbc:postgresql://localhost:5432/secureCapita
-    username: ENC(nnBADRj6fvYT/TJ3MyzKQVyqDVYDhAiQ)
-    password: ENC(EGJMxU6bmZMWFMcoituqdg==)
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    show-sql: true
-    database: postgresql
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        globally_quoted_indentifiers: true
-        format_sql: true
-  sql:
-    init:
-      mode: never
-      continue-on-error: false
-  mail:
-    host: mail.enstmo-ueb.cm
-    port: 587
-    username: ENC(WXSieszJBlhSCgHlPHjfYNt5HmY4ysLf2D+0ImTmpSw=)
-    password: ENC(qW/ppbUomLX3gn6o11mH+KdGjK09kmeb)
-    properties:
-      mail:
-        smtp:
-          writetimeout: 5000
-          connectiontimeout: 5000
-          timeout: 5000
-          auth: true
-          starttls:
-            enable: true
-            required: true
+#DATABASE CONFIG
+DB_PROVIDER: postgresql
+DB_HOST: localhost
+DB_PORT: 5433
+DB_NAME: secureCapita
+DB_USERNAME: ENC(nnBADRj6fvYT/TJ3MyzKQVyqDVYDhAiQ)
+DB_PASSWORD: ENC(EGJMxU6bmZMWFMcoituqdg==)
+DB_DRIVER: ENC(bV+z0uaUhtLQ7gEFN83UPZbqZGysKhwgNdVkEYF5Z9Q=)
+DDL_AUTO: update
 
+#SERVER CONFIG
+CONTAINER_PORT: 8095
+ACTIVE_PROFILE: prod
+
+#EMAIL CONFIG
+EMAIL_SMTP_PORT: ENC(lczYTK/GlJ89bESnOBhxUg==)
+EMAIL_SMTP_HOST: ENC(NUV5AjIAiuLp1kwf/PJatGrAnUtnqTQtKPvsRm4zbNI=)
+EMAIL_USERNAME: ENC(WXSieszJBlhSCgHlPHjfYNt5HmY4ysLf2D+0ImTmpSw=)
+EMAIL_PASSWORD: ENC(qW/ppbUomLX3gn6o11mH+KdGjK09kmeb)
+VERIFY_EMAIL_HOST: http://localhost:${CONTAINER_PORT}
+
+UI_APP_URL: http://localhost:4200
+
+#JWT CONFIG
+JWT_SECRET: ENC(7/UD9PritIRE5Ce06dsmUXxAMavF0ZpXmJ1nsh600dznc6rO5nt6JA==)
+JWT_ACCESS_TIME: 180_000_000
+JWT_REFRESH_TIME: 432_000_000

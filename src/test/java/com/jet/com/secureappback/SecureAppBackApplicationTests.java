@@ -25,7 +25,7 @@ class SecureAppBackApplicationTests {
 		config.setStringOutputType("base64");
 		encryptor.setConfig(config);
 
-		String plaintext = "BLBOUBIBIBUBUBU";
+		String plaintext = "2444444444444444444";
 		System.out.println("Encrypted key : " + encryptor.encrypt(plaintext));
 	}
 

@@ -1,0 +1,50 @@
+token_expiration_time:
+  access: 432_000_000
+  refresh: 432_000_000
+jwt:
+  secret: ENC(42PAk0avAHEtYIaFF8kbbDgYKqomgNxrXlgAOjlApvKmT/tww3EddA==)
+server:
+  port: 8080
+  error:
+    path: /user/error
+    whitelabel:
+      enabled: false
+spring:
+  application:
+    name: secureappback
+  #  autoconfigure:
+  #    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  datasource:
+    url: jdbc:postgresql://localhost:5433/secureCapita
+    username: ENC(nnBADRj6fvYT/TJ3MyzKQVyqDVYDhAiQ)
+    password: ENC(EGJMxU6bmZMWFMcoituqdg==)
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        globally_quoted_indentifiers: true
+        format_sql: true
+  sql:
+    init:
+      mode: never
+      continue-on-error: false
+  mail:
+    host: ENC(NUV5AjIAiuLp1kwf/PJatGrAnUtnqTQtKPvsRm4zbNI=)
+    port: 587
+    username: ENC(WXSieszJBlhSCgHlPHjfYNt5HmY4ysLf2D+0ImTmpSw=)
+    password: ENC(qW/ppbUomLX3gn6o11mH+KdGjK09kmeb)
+    properties:
+      mail:
+        smtp:
+          writetimeout: 5000
+          connectiontimeout: 5000
+          timeout: 5000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+

@@ -1,12 +1,83 @@
-spring:
-  profiles:
-    active: @spring.profiles.active@
-
-application:
-  title: secureappback
-  version: 1.0
+#------------------
+# GENERAL
+#-------------
 server:
+  port: ${CONTAINER_PORT:8080}
   error:
     path: /users/error
     whitelabel:
       enabled: false
+application:
+  title: secureappback
+  version: 1.0
+ui:
+  app:
+    url: ${UI_APP_URL}
+
+  #------------------
+  # DATA SOURCE
+  #-------------
+#app.datasource.url=${DB_URL}
+#app.datasource.password=${DB_PASSWORD}
+#app.datasource.username=${DB_USER}
+#app.datasource.driver-class-name=${DB_DRIVER}
+#  #
+#  ##------------------
+#  ## JPA / HIBERNATE
+#  ##----------------
+#app.jpa.hibernate.dialect=${DIALECT}
+#app.jpa.hibernate.generate-ddl=${GENERATE_DDL}
+#app.jpa.hibernate.show-sql=${SHOW_SQL}
+#app.jpa.hibernate.ddl-auto=${DDL_AUTO}
+#app.jpa.hibernate.globally_quoted_identifiers=${GLOBALLY_QUOTED_IDENTIFIERS}
+
+  #
+  ##------------------
+  ## JWT
+  ##----------------
+token_expiration_time:
+  access: ${JWT_ACCESS_TIME}
+  refresh: ${JWT_REFRESH_TIME}
+jwt:
+  secret: ${JWT_SECRET}
+##------------------
+spring:
+  application:
+    name: SecureCapitaJet
+  profiles:
+    active: ${ACTIVE_PROFILE:dev}
+  mail:
+    port: ${EMAIL_SMTP_PORT}
+    host: ${EMAIL_SMTP_HOST}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          writetimeout: 5000
+          connectiontimeout: 5000
+          timeout: 5000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+      verify:
+        host: ${VERIFY_EMAIL_HOST}
+  sql:
+    init:
+      continue-on-error: false
+      mode: never
+  datasource:
+    url: jdbc:${DB_PROVIDER}://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER}
+  jpa:
+    show-sql: true
+    database: ${DB_PROVIDER}
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    properties:
+      hibernate:
+        globally_quoted_indentifiers: true
+        format_sql: true
