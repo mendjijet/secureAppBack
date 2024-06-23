@@ -1,6 +1,5 @@
-FROM maven:3.9.3 as build
+FROM maven:3.9.7 as build
 WORKDIR /app
-ARG CONTAINER_PORT
 COPY pom.xml /app
 RUN mvn dependency:resolve
 COPY . /app
@@ -9,6 +8,6 @@ RUN mvn package -DskipTests -X
 
 FROM openjdk:21
 COPY --from=build /app/target/*.jar app.jar
-EXPOSE ${CONTAINER_PORT}
+EXPOSE 8095
 CMD ["java", "-jar", "app.jar"]
 LABEL authors="MENDJIJET"

@@ -36,8 +36,8 @@ ui:
   ## JWT
   ##----------------
 token_expiration_time:
-  access: ${JWT_ACCESS_TIME}
-  refresh: ${JWT_REFRESH_TIME}
+  access: 180_000_000
+  refresh: 432_000_000
 jwt:
   secret: ${JWT_SECRET}
 ##------------------
@@ -68,7 +68,7 @@ spring:
       continue-on-error: false
       mode: never
   datasource:
-    url: jdbc:${DB_PROVIDER}://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    url: jdbc:postgresql://host.docker.internal:5433/secureCapita
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: ${DB_DRIVER}
